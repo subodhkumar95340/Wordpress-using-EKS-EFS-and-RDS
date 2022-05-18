@@ -16,7 +16,7 @@ pipeline{
     stages{
         stage("Checkout the Project"){
             steps{
-                git branch: 'main', url: 'https://github.com/subodhkumar95340/jenkins.git'
+                git 'https://github.com/subodhkumar95340/Wordpress-using-EKS-EFS-and-RDS.git'
             }
         }
         stage("Build the Package"){
