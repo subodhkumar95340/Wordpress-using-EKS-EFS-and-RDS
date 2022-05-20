@@ -6,8 +6,10 @@ phases:
   pre_build:
       commands:
         # Docker Image Tag with Date Time & Code Buiild Resolved Source Version
+        - TAG="$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
         # Update Image tag in our Kubernetes Deployment Manifest        
-        #
+        - echo "Update Image tag in kube-manifest..."
+        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' kube-manifests/01-DEVOPS-Nginx-Deployment.yml
         # Verify AWS CLI Version        
         - echo "Verify AWS CLI Version..."
         - aws --version
@@ -20,7 +22,6 @@ phases:
     commands:
       # Build Docker Image
       - echo "Build started on `date`"
-      - TAG="$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
       - echo "Building the Docker image..."
       - docker build --tag $REPOSITORY_URI:$TAG .
   post_build:
