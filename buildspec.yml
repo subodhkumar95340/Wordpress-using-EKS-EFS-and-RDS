@@ -6,10 +6,8 @@ phases:
   pre_build:
       commands:
         # Docker Image Tag with Date Time & Code Buiild Resolved Source Version
-        - TAG="$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
         # Update Image tag in our Kubernetes Deployment Manifest        
-        - echo "Update Image tag in kube-manifest..."
-        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' kube-manifests/01-DEVOPS-Nginx-Deployment.yml
+        #
         # Verify AWS CLI Version        
         - echo "Verify AWS CLI Version..."
         - aws --version
@@ -22,6 +20,7 @@ phases:
     commands:
       # Build Docker Image
       - echo "Build started on `date`"
+      - TAG="$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
       - echo "Building the Docker image..."
       - docker build --tag $REPOSITORY_URI:$TAG .
   post_build:
@@ -44,6 +43,7 @@ phases:
       # Apply changes to our Application using kubectl
       - echo "Apply changes to kube manifests"            
       - kubectl apply -f kube-manifests/
+      #- kubectl get nodes
       - echo "Completed applying changes to Kubernetes Objects"           
       # Create Artifacts which we can use if we want to continue our pipeline for other stages
       - printf '[{"name":"01-DEVOPS-Nginx-Deployment.yml","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
@@ -54,7 +54,4 @@ phases:
       #- echo "AWS_SESSION_TOKEN...  ${AWS_SESSION_TOKEN}"            
       #- echo "AWS_EXPIRATION...  $AWS_EXPIRATION"             
       #- echo "EKS_CLUSTER_NAME...  $EKS_CLUSTER_NAME"             
-artifacts:
-  files: 
-    - build.json   
-    - kube-manifests/*
+ 
