@@ -66,7 +66,7 @@ pipeline{
             steps{   
                 script {
                     withKubeConfig([credentialsId: 'eks', serverUrl: '']) {
-                        sh ('kubectl apply -f  eks-wp/')
+                        sh ('kubectl apply -f  kube-manifests/')
                     }
                 }
             }
