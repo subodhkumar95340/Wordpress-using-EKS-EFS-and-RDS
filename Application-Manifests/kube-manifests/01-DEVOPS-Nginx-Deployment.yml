@@ -70,8 +70,7 @@ spec:
     spec:
       containers:
     # - image: wordpress:php7.1-apache
-    # - image: 461655781674.dkr.ecr.us-east-2.amazonaws.com/jenkin-pipeline-build-demo:latest
-      - image: CONTAINER_IMAGE
+      - image: 461655781674.dkr.ecr.us-east-2.amazonaws.com/jenkin-pipeline-build-demo:latest
         name: wordpress
         env:
         - name: DB_HOSTNAME
